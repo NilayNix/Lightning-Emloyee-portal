@@ -1,0 +1,23 @@
+<aura:component >
+    
+    <aura:registerEvent name="FatchUserPersonalDetails" type="c:UserPersonalDetails"/>
+    <!-- <aura:registerEvent name="FatchUserCertificatesDetails" type="c:UserCertificatesDetails"/>-->
+    
+    
+    
+    <lightning:layoutItem padding="around-small" size="3">
+        <div class="page-section page-right">
+            <nav class="slds-nav-vertical" aria-label="Sub page">
+                <div class="slds-nav-vertical__section">
+                    <ol>
+                        <li class="slds-nav-vertical__item slds-is-active"><lightning:button variant="brand" label="Personal Details" onclick="{! c.onFatchDetailClick }" aura:id="PersonalDetails" /></li>
+                        <li class="slds-nav-vertical__item"><lightning:button variant="brand" label="Certifications" onclick="{! c.onFatchDetailClick }" aura:id="Certificates"/></li>
+                        <li class="slds-nav-vertical__item"><lightning:button variant="brand" label="Emergency contact" onclick="{! c.onFatchDetailClick }" aura:id="Emergencycontact"/></li>
+                        <li class="slds-nav-vertical__item"><lightning:button variant="brand" label="know Your Colleagues" onclick="{! c.onFatchDetailClick }" aura:id="knowYourColleagues"/></li>
+                    </ol>
+                </div>
+            </nav>
+        </div>
+    </lightning:layoutItem>
+    
+</aura:component>

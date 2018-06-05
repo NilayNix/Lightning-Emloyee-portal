@@ -1,0 +1,10 @@
+<aura:component implements="flexipage:availableForAllPageTypes" access="global" >
+	<div class="c-container">
+        <lightning:layout multipleRows="true">
+            <c:HeaderComponent ></c:HeaderComponent>
+            <c:Navbar ></c:Navbar>
+            <c:BodyComponent ></c:BodyComponent>
+            <c:FooterComponent ></c:FooterComponent>
+        </lightning:layout>
+    </div>
+</aura:component>
