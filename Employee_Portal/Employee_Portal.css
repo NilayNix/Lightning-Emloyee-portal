@@ -17,3 +17,22 @@
 .THIS .page-right {
     background: #f0efef;
 }
+.THIS.grey {
+    background-color: grey;
+}
+
+.THIS {
+    background-color: white;
+}
+
+.THIS .red {
+    background-color: red;
+}
+
+.THIS .blue {
+    background-color: blue;
+}
+
+.THIS .green {
+    background-color: green;
+}

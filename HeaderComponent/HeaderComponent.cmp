@@ -1,10 +1,22 @@
-<aura:component controller="EmployeePortalController">
+<aura:component >
     <aura:attribute name='greeting' type='String'></aura:attribute>
-    <aura:attribute name='username' type='String'></aura:attribute>
-    <aura:handler name="init" value="{!this}" action="{!c.greeting}"></aura:handler>
-    <lightning:layoutItem padding="around-small" size="12">
+    <aura:attribute name='user' type='String'></aura:attribute>
+    <aura:attribute name='recordId' type='String'></aura:attribute>
+    
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"></aura:handler>
+    
+    <aura:if isTrue="{! !empty(v.recordId)}">
+        <force:recordData aura:id="recordLoader"
+                          recordId="{!v.recordId}"
+                          layoutType="FULL"
+                          targetFields="{!v.user}"
+                          targetError="{!v.recordError}"
+                          />
+    </aura:if>
+    
+    <lightning:layoutItem padding="around-smal" size="12">
         <div class="page-section page-header">
-            <h2><div class="slds-text-align_center">{!v.greeting} {!v.username} !</div></h2>
+            <h2><div class="slds-text-align_center">{!v.greeting} {!v.user.Name} !</div></h2>
         </div>
     </lightning:layoutItem>
 </aura:component>

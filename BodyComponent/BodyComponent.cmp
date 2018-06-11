@@ -1,107 +1,124 @@
-<aura:component controller="EmployeePortalController" implements="forceCommunity:searchInterface,force:hasRecordId" access="global">
+<aura:component controller="EmployeePortalController" implements="flexipage:availableForRecordHome,force:lightningQuickActionWithoutHeader,force:hasRecordId" access="global">
     
-    <aura:attribute name="userdetails" type="Contact"></aura:attribute>
+    <aura:attribute name="userdetails" type="Object"></aura:attribute>
     <aura:attribute name="userCertificatesdetails" type="String"></aura:attribute>
     <aura:attribute name="tab" type="String"></aura:attribute>
     <aura:attribute name="emergencycontacts" type="String[]"></aura:attribute>
     <aura:attribute name="getContacts" type="String[]"></aura:attribute>
     <aura:attribute name="recordId" type="String"></aura:attribute>
-    
-    <force:recordData aura:id="recordLoader"
-                      recordId="{!v.recordId}"
-                      targetFields="{!v.userdetails}"
-                      targetError="{!v.recordError}"
-                      recordUpdated="{!c.UserPersonalDetailsEvent}"
-                      />
+    <aura:attribute name="deleterecordId" type="String"></aura:attribute>
+    <aura:attribute name="modal" type="Boolean"></aura:attribute>
+    <aura:attribute name="editdetailsId" type="String"></aura:attribute>
     
     <aura:handler event="c:UserPersonalDetails" action="{!c.UserPersonalDetailsEvent}" />
-    <!--<aura:handler event="c:UserPersonalDetails" action="{!c.UserCertificatesDetails}" />-->
-    <aura:handler name="init" value="{!this}" action="{!c.UserPersonalDetailsEvent}"/>
+    
+    
+    <aura:if isTrue="{! !empty(v.recordId)}">
+        <force:recordData aura:id="recordLoader"
+                          recordId="{!v.recordId}"
+                          layoutType="FULL"
+                          targetFields="{!v.userdetails}"
+                          targetError="{!v.recordError}"
+                          recordUpdated="{!c.UserPersonalDetailsEvent}"
+                          />
+    </aura:if>
+    <aura:if isTrue="{! !empty(v.deleterecordId)}">
+        <force:recordData aura:id="recordHandler"
+                          recordId="{!v.deleterecordId}"
+                          fields="Id"
+                          targetError="{!v.recordError}"
+                          recordUpdated="{!c.deleteContactEvent}"/>
+    </aura:if>
     
     <lightning:layoutItem padding="around-small" size="6">
-        <div class="page-section page-main">
-            
-            
-            <aura:if isTrue="{!and(or(v.tab == 'PersonalDetails',v.tab == undefined),!empty(v.userdetails))}">
-                <aura:iteration items="{!v.userdetails}" var="details">
-                    <table border='1'> 
-                        <tr>                                    
-                            <td>First Name</td>
-                            <td>{!details.FirstName}</td>
-                        </tr> 
-                        <tr>                                    
-                            <td>Last Name</td>
-                            <td>{!details.LastName}</td>
-                        </tr>
-                        <tr>                                    
-                            <td>Designation</td>
-                            <td>{!details.Designation__c}</td>
-                        </tr>
-                        <tr>                                    
-                            <td>Technology</td>
-                            <td>{!details.Technology__c}</td>
-                        </tr>
-                        <tr>                                    
-                            <td>Social_Media_Link</td>
-                            <td>{!details.Social_Media_Link__c}</td>
-                        </tr>
-                        <tr>                                    
-                            <td>Interests</td>
-                            <td>{!details.Interests__c}</td>
-                        </tr>
-                    </table>
-                </aura:iteration>
+        <div class="page-section page-main div_height">
+            <aura:if isTrue="{! or(v.tab == 'PersonalDetails',v.tab == undefined)}">
+                <table border='1'> 
+                    <tr>                                    
+                        <td>First Name</td>
+                        <td><lightning:formattedText title="Name" value="{!v.userdetails.FirstName}" /></td>
+                    </tr> 
+                    <tr>                                    
+                        <td>Last Name</td>
+                        <td><lightning:formattedText title="Name" value="{!v.userdetails.LastName}" /></td>
+                    </tr>
+                    <tr>                                    
+                        <td>Designation</td>
+                        <td><lightning:formattedText title="Name" value="{!v.userdetails.Designation__c}" /></td>
+                    </tr>
+                    <tr>                                    
+                        <td>Technology</td>
+                        <td><lightning:formattedText title="Name" value="{!v.userdetails.Technology__c}" /></td>
+                    </tr>
+                    <tr>                                    
+                        <td>Social_Media_Link</td>
+                        <td><lightning:formattedText title="Name" value="{!v.userdetails.Social_Media_Link__c}" /></td>
+                    </tr>
+                    <tr>                                    
+                        <td>Interests</td>
+                        <td><lightning:formattedText title="Name" value="{!v.userdetails.Interests__c}" /></td>
+                    </tr>
+                </table>
             </aura:if>
-            
-            
+               
             <aura:if isTrue="{!and(v.tab == 'Certificates',!empty(v.userCertificatesdetails))}">
+                
                 <table border='1'> 
                     <tr>                                    
                         <th>Name</th>
                         <th>Link</th>
                         <th>Vaild till</th>
+                        <th>Edit</th>
                     </tr>
                     <aura:iteration items="{!v.userCertificatesdetails}" var="details">
                         <tr>                                    
-                            <td>{!details.Name}{!v.userdetails.Name}</td>
+                            <td>{!details.Name}</td>
                             <td>{!details.Link__c}</td>
                             <td>{!details.Valid_Till__c}</td>
+                            <td><lightning:button aura:id="datadetails" value="{!details.Id}" variant="brand" label="edit" title="" onclick="{! c.editdata }" /></td>
                         </tr>
                     </aura:iteration>
                 </table>
-                <c:Modal ></c:Modal>
+                <c:Modal></c:Modal>
+                <c:EditPopUP modal="{!v.modal}" editdetailsId="{!v.editdetailsId}"></c:EditPopUP>
+                <c:chart></c:chart>
             </aura:if>
             
             <aura:if isTrue="{!and(v.tab == 'Emergencycontact',!empty(v.emergencycontacts))}">
-                <table border='1'> 
-                    <tr>                                    
-                        <th>Name</th>
-                        <th>Number</th>
-                        <th>Email</th>
-                        <th>Relationship</th>
-                    </tr>
-                    <aura:iteration items="{!v.emergencycontacts}" var="details">
-                        <tr>                                    
-                            <td>{!details.Name}</td>
-                            <td>{!details.Phone}</td>
-                            <td>{!details.Email}</td>
-                            <td>{!details.RelationShip__c}</td>
-                        </tr>
-                    </aura:iteration>
-                </table>
+                <aura:iteration items="{!v.emergencycontacts}" var="details">                   
+                    <lightning:tile label="{!details.Name}" href="/path/to/somewhere">
+                        <aura:set attribute="media">
+                            <lightning:icon iconName="standard:groups"/>
+                        </aura:set>
+                        <dl class="slds-dl_horizontal">
+                            <dt class="slds-dl_horizontal__label">
+                                <p class="slds-truncate" >Phone Number:</p>
+                            </dt>
+                            <dd class="slds-dl_horizontal__detail slds-tile__meta">
+                                <p class="slds-truncate" >{!details.Phone}</p>
+                            </dd>
+                            <dt class="slds-dl_horizontal__label">
+                                <p class="slds-truncate" >Email:</p>
+                            </dt>
+                            <dd class="slds-dl_horizontal__detail slds-tile__meta">
+                                <p class="slds-truncate" >{!details.Email}</p>
+                            </dd>
+                            <dt class="slds-dl_horizontal__label">
+                                <p class="slds-truncate" >Relationship:</p>
+                            </dt>
+                            <dd class="slds-dl_horizontal__detail slds-tile__meta">
+                                <p class="slds-truncate" >{!details.RelationShip__c}</p>
+                            </dd>
+                            <div class="slds-p-horizontal--small">
+                                <lightning:button value="{!details.Id}" label="Delete Record" variant="destructive" onclick="{!c.handleDeleteRecord}"/>
+                            </div>
+                        </dl>
+                    </lightning:tile>
+                </aura:iteration>
             </aura:if>
             
             <aura:if isTrue="{!(v.tab == 'knowYourColleagues')}">
-                <lightning:input aura:id="keyword" name="enter-search" onchange="{!c.searchContact}" type="search"/>
-                <aura:iteration items="{!v.getContacts}" var="details">
-                    <ul class="slds-has-dividers_bottom-space">
-                        <li class="slds-item">
-                            <lightning:tile label="{!details.Name}" href="{!c.searchContact}">
-                                <lightning:button value="{!details.Id}" variant="base" label="show more Details" title="Base action" onclick="{! c.colleaguesDetails }"/>
-                            </lightning:tile>
-                        </li>
-                    </ul>
-                </aura:iteration>
+                <c:knowYourColleagues></c:knowYourColleagues>
             </aura:if>
         </div>
     </lightning:layoutItem>

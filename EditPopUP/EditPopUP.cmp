@@ -1,0 +1,41 @@
+<aura:component controller="EmployeePortalController">
+    
+    <aura:attribute name="certificate" type="object"/>
+    <aura:attribute name="modal" type="Boolean"></aura:attribute>
+    <aura:attribute name="editdetailsId" type="String"></aura:attribute>
+    
+    <force:recordData aura:id="recordEditor"
+                      layoutType="FULL"
+                      recordId="{!v.editdetailsId}"
+                      targetError="{!v.recordError}"
+                      targetFields ="{!v.certificate}"
+                      mode="EDIT" />
+    
+    <aura:if isTrue="{!(v.modal)}">
+        <div class="demo-only" style="height: 640px;">
+            <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+                <div class="slds-modal__container">
+                    <header class="slds-modal__header">
+                        <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Close" onclick="{! c.hidemodal }">X
+                            <span class="slds-assistive-text">Close</span>
+                        </button>
+                        <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">Edit certificate: {!v.editdetailsId}</h2>
+                    </header>
+                    <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                        <div class="row">
+                            <lightning:input aura:id="Certificate name" name="propName" type="text" label="Certificate name" required="true" class="slds-size_1-of-1 slds-p-horizontal_x-small" value="{!v.certificate.Name}"/>
+                            <lightning:input aura:id="certificate Link" name="propBeds" type="text" label="certificate Link" class="slds-size_1-of-1 slds-p-horizontal_x-small" value="{!v.certificate.Link__c}"/>
+                            <lightning:input aura:id="Valid till" name="propBaths" type="date" label="Valid till" class="slds-size_1-of-1 slds-p-horizontal_x-small" value="{!v.certificate.Valid_Till__c}"/>
+                            
+                        </div>
+                    </div>
+                    <footer class="slds-modal__footer">
+                        <button class="slds-button slds-button_neutral" onclick="{!c.hidemodal}">Cancel</button>
+                        <button class="slds-button slds-button_brand" onclick="{!c.handleSaveRecord}">Edit</button>
+                    </footer>
+                </div>
+            </section>
+            <div class="slds-backdrop slds-backdrop_open"></div>
+        </div>
+    </aura:if>
+</aura:component>

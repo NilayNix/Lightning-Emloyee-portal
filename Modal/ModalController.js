@@ -9,7 +9,7 @@
         var certiname = component.find("Certificate name").get('v.value');
         var certifLink = component.find("certificate Link").get('v.value');
         var validtill = component.find("Valid till").get('v.value');
-        console.log(typeof validtill);
+        console.log(validtill);
         console.log(JSON.stringify(component.get("v.certificate")));
         action.setParams({"certiname":certiname,
                           "certifLink": certifLink,

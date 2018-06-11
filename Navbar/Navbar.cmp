@@ -6,7 +6,7 @@
     
     
     <lightning:layoutItem padding="around-small" size="3">
-        <div class="page-section page-right">
+        <div class="page-section page-right red">
             <nav class="slds-nav-vertical" aria-label="Sub page">
                 <div class="slds-nav-vertical__section">
                     <ol>

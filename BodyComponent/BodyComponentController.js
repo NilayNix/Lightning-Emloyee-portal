@@ -2,26 +2,20 @@
     UserPersonalDetailsEvent : function(component, event, helper) {
         var msg= event.getParam("message");
         if(msg == 'PersonalDetails' || msg == undefined){
-            
             component.set("v.tab" ,msg)
-            helper.helpermethod(component);
         }
         
         if(msg == 'Certificates'){
             component.set("v.tab" ,msg)
-            helper.certificatesDetails(component);
         }
         
         if(msg == 'Emergencycontact'){
             component.set("v.tab" ,msg)
-            helper.Emergencycontacts(component);
         }
         
         if(msg == 'knowYourColleagues'){
             component.set("v.tab" ,msg)
-            //var searchValue = component.find("knowYourColleagues").get('v.value');
-            //console.log(searchValue);
-            //helper.searchContact(component);
+            
         }
     },
     
@@ -40,11 +34,48 @@
             "slideDevName": "related"
         });
         navEvt.fire();        
-    }
-    ,
+    },
     
-    doinit : function(component, event, helper) {
-        console.log("init");        
-    }
+    handleDeleteRecord: function(component, event, helper) {
+        var deleterecordId = event.getSource().get("v.value");
+        console.log(deleterecordId);
+        component.set("v.deleterecordId" ,deleterecordId);
+        
+    },
     
+    deleteContactEvent: function(component, event, helper) {
+        component.find("recordHandler").deleteRecord($A.getCallback(function(deleteResult) {
+            // NOTE: If you want a specific behavior(an action or UI behavior) when this action is successful 
+            // then handle that in a callback (generic logic when record is changed should be handled in recordUpdated event handler)
+            if (deleteResult.state === "SUCCESS" || deleteResult.state === "DRAFT") {
+                // record is deleted
+                
+                console.log("Record is deleted.");
+                $A.get('e.force:refreshView').fire();
+                var resultsToast = $A.get("e.force:showToast");
+                resultsToast.setParams({
+                    "title": "Deleted",
+                    "message": "The record was deleted."
+                });
+                resultsToast.fire();
+                
+            } else if (deleteResult.state === "INCOMPLETE") {
+                console.log("User is offline, device doesn't support drafts.");
+            } else if (deleteResult.state === "ERROR") {
+                console.log('Problem deleting record, error: ' + JSON.stringify(deleteResult.error));
+            } else {
+                console.log('Unknown problem, state: ' + deleteResult.state + ', error: ' + JSON.stringify(deleteResult.error));
+            }
+            component.re
+        }));
+    },
+    
+    editdata: function(component, event, helper) {
+        console.log("Edit called");
+        var EditData = event.getSource().get("v.value");
+        console.log(EditData);
+        component.set("v.modal" ,true);
+        component.set("v.editdetailsId" ,EditData)
+    }
+     
 })
